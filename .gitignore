@@ -6,6 +6,7 @@ obj/
 .vs/
 .vscode/
 *.user
+.idea/
 
 #Archivos temporales
 *.log

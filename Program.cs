@@ -9,6 +9,8 @@ using System.Reflection;
 var assembly = Assembly.GetExecutingAssembly();
 var version = assembly.GetName().Version;
 
+MostrarBanner();
+
 if (args.Length > 0)
 {
   switch (args[0].ToLower())
@@ -31,10 +33,14 @@ if (args.Length > 0)
   }
 }
 
+// Variables
+
 int cantidadProductos = 0;
 decimal valorTotalDelInventario = 0.00m;
 bool sistemaActivo = true;
 string nombreSistema = "Sistema de Gestión de Inventario";
+// decimal precio = 19.99m;
+
 
 Console.WriteLine("Estado del Sistema");
 Console.WriteLine($"  Nombre: {nombreSistema}");
@@ -71,10 +77,41 @@ else
   Console.WriteLine("Error: debe ingresar un numero decimal");
 }
 
-//MostrarBanner();
+// Loop de nullabilidad
+
+Console.WriteLine("Comandos: listar, agregar, busca, salir");
+Console.WriteLine();
+
+while (sistemaActivo)
+{
+  Console.Write("inventario: ");
+  string? entrada = Console.ReadLine();
+
+  // Aplicando el manejo seguro
+  string comando = string.IsNullOrEmpty(entrada) ? "salir" : entrada.Trim().ToLower();
+  switch (comando)
+  {
+    case "salir":
+      sistemaActivo = false;
+      Console.WriteLine("Hasta luego");
+      break;
+
+    case "listar":
+      Console.WriteLine($"Productos del inventario: {cantidadProductos}");
+      break;
+
+    case "":
+      break;
+
+    default:
+      Console.WriteLine($"Comando '{comando}' no reconocido.");
+      Console.WriteLine("Comandos disponibles: listar, agregar, buscar, salir");
+      break;
+  }
+}
 
 // Modo interactivo si no hay argumentos
-Console.Write("Ingrese un comando (o 'salir' para terminar): ");
+/*Console.Write("Ingrese un comando (o 'salir' para terminar): ");
 string? entrada = Console.ReadLine(); // STDIN, con el ? acepta entradas nulas
 
 if (string.IsNullOrWhiteSpace(entrada) || entrada.ToLower() == "salir")
@@ -83,7 +120,7 @@ if (string.IsNullOrWhiteSpace(entrada) || entrada.ToLower() == "salir")
   Environment.Exit(0);
 }
 
-/*
+
 Console.WriteLine("Estructura del proyecto:");
 Console.WriteLine("  InventarioApp/");
 Console.WriteLine("   |-- Program.cs");

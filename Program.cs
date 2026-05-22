@@ -31,7 +31,47 @@ if (args.Length > 0)
   }
 }
 
-MostrarBanner();
+int cantidadProductos = 0;
+decimal valorTotalDelInventario = 0.00m;
+bool sistemaActivo = true;
+string nombreSistema = "Sistema de Gestión de Inventario";
+
+Console.WriteLine("Estado del Sistema");
+Console.WriteLine($"  Nombre: {nombreSistema}");
+Console.WriteLine($"  Productos registrados: {cantidadProductos}");
+Console.WriteLine($"  Valor total del inventario: {valorTotalDelInventario:N2}"); // :N2 indica la cantidad de decimales y separadores de miles
+Console.WriteLine($"  Sistema activo: {(sistemaActivo ? "Sí" : "No")}");
+
+// Conversiones
+Console.Write("Ingrese una cantidad: ");
+string? entradaCantidad = Console.ReadLine();
+
+// Conversion segura TryParse
+if (int.TryParse(entradaCantidad, out int cantidad))
+{
+  Console.WriteLine($"Cantidad valida: {cantidad}");
+  cantidadProductos = cantidad;
+}
+else
+{
+  Console.WriteLine("Error: debe ingresar un numero entero");
+}
+
+Console.Write("Ingrese un precio: ");
+string? entradaPrecio = Console.ReadLine();
+
+if (decimal.TryParse(entradaPrecio, out decimal precio2))
+{
+  Console.Write($"Precio valido: {precio2:N2}\n");
+  valorTotalDelInventario = cantidadProductos * precio2;
+  Console.WriteLine($"Valor total del inventario actualizado: ${valorTotalDelInventario:N2}");
+}
+else
+{
+  Console.WriteLine("Error: debe ingresar un numero decimal");
+}
+
+//MostrarBanner();
 
 // Modo interactivo si no hay argumentos
 Console.Write("Ingrese un comando (o 'salir' para terminar): ");

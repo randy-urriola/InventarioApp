@@ -8,7 +8,7 @@
 
     <AssemblyName>InventarioApp</AssemblyName>
     <RootNamespace>InventarioApp</RootNamespace>
-    <Version>1.0.0.0</Version>
+    <Version>3.0.0.0</Version>
     <Authors>Randy Urriola</Authors>
     <Description>Sistema de gestión de inventario - Curso fundamentos .NET</Description>
   </PropertyGroup>

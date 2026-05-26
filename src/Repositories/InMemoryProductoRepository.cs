@@ -5,8 +5,8 @@ using System.Linq;
 
 public class InMemoryProductoRepository : IProductoRepository
 {
-  private readonly List<Producto> _productos = new();  // mantiene los productos durante la sesion
-  private int _proximoId = 1;  // contador para asignar id unicos
+  private readonly List<Producto> _productos = new();  // mantiene los productos durante la sesión
+  private int _proximoId = 1;  // contador para asignar id únicos
 
   public void Agregar(Producto producto)  // nuevo producto y se incrementa id
   {

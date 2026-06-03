@@ -70,7 +70,7 @@ public class InMemoryProductoRepository : IProductoRepository
     return _productos.Select((Producto p) => p.Nombre);
   }
 
-  public bool HayStockBaja()
+  public bool HayStockBajo()
   {
     return _productos.Any((Producto p) => p.Cantidad < 5);
   }

@@ -1,4 +1,4 @@
-namespace InventarioApp.Models;
+namespace InventarioApp.Factories;
 
 using InventarioApp.Models;
 

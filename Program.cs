@@ -1,105 +1,44 @@
-﻿
-// ============================================================
-// SISTEMA DE INVENTARIO - Clase 1.1
-// Estado: Mensaje de bienvenida
-// ============================================================
+﻿using InventarioApp.Factories;
+using InventarioApp.Repositories;
+using InventarioApp.Models;
 
+Console.WriteLine("=== InventarioApp ===");
 
-// Variables
+var repositorio = new InMemoryProductoRepository();
 
-int cantidadProductos = 0;
-decimal valorTotalDelInventario = 0.00m;
-bool sistemaActivo = true;
+var laptop = ProductoFactory.Crear("Laptop Dell XPS 13", 1200, 5, CategoriaProducto.Electronica);
+var mouse = ProductoFactory.Crear("Mouse Logitech MX Master", 99, 20, CategoriaProducto.Electronica);
+var teclado = ProductoFactory.Crear("Teclado Mecánico", 150, 3, CategoriaProducto.Electronica);
+var silla = ProductoFactory.Crear("Silla Ergonómica Herman Miller", 500, 8, CategoriaProducto.Muebles);
+var escritorio = ProductoFactory.Crear("Escritorio Stand-up", 300, 2, CategoriaProducto.Muebles);
 
-MostrarBanner();
+repositorio.Agregar(laptop);
+repositorio.Agregar(mouse);
+repositorio.Agregar(teclado);
+repositorio.Agregar(silla);
+repositorio.Agregar(escritorio);
 
-bool continuar = true;
+Console.WriteLine($"Productos agregados: {repositorio.Cantidad}\n");
 
-while (continuar)
+// consultas básicas LINQ
+
+var electronicos = repositorio.BuscarPorCategoria(CategoriaProducto.Electronica);
+Console.WriteLine("=== Productos Electrónicos ===");
+
+foreach (var producto in electronicos)
 {
-  MostrarMenu();
-  string comando = LeerEntrada("inventario ");
-  //continuar = ProcesarComando(comando);
-  Console.WriteLine($"Comando ingresado: {comando}");
-  continuar = false;
+  Console.WriteLine($"- {producto.Nombre} : ${producto.Precio}");
 }
 
-//================== MéTODOS ==================
-
-bool ProcesarComando(string comando)
+var conMouse = repositorio.BuscarPorNombre("mouse");
+Console.WriteLine("\nProductos con 'mouse' en el nombre: ");
+foreach (var producto in conMouse)
 {
-  switch (comando)
-  {
-    case "listar":
-      ListarProductos();
-      return true;
-    case "agregar":
-      AgregarProducto();
-      return true;
-    case "buscar":
-      BuscarProducto();
-      return true;
-    case "salir":
-      return false;
-    default:
-      Console.WriteLine($"Comando '{comando}' no valido");
-      return true;
-}
+  Console.WriteLine($"- {producto.Nombre}");
 }
 
-void ListarProductos()
-{
-  Console.WriteLine($"Total: {cantidadProductos} productos en el inventario");
-  Console.WriteLine($"Valor: ${valorTotalDelInventario}");
-}
+var nombres = repositorio.ObtenerNombres();
+Console.WriteLine($"\n Todos los nombres: {string.Join(", ", nombres)}");
 
-void AgregarProducto()
-{
-  Console.WriteLine("Agregar producto (módulo 3)");
-}
-
-void BuscarProducto()
-{
-  Console.WriteLine("Agregar producto (módulo 4)");
-}
-
-string LeerEntrada(string prompt)
-{
-  string salida = "El prompt ingresado es: " + prompt;
-  return salida;
-}
-
-
-
-
-// ====================== Funciones ======================
-
-void MostrarBanner()
-{
-  Console.WriteLine("╔══════════════════════════════════════╗");
-  Console.WriteLine("║   SISTEMA DE GESTIÓN DE INVENTARIO   ║");
-  Console.WriteLine("╚══════════════════════════════════════╝");
-  Console.WriteLine();
-}
-
-void MostrarAyuda()
-{
-  Console.WriteLine("USO: InventarioApp [comando] [opciones]");
-  Console.WriteLine();
-  Console.WriteLine("COMANDOS:");
-  Console.WriteLine("  --help, -h      Muestra esta ayuda");
-  Console.WriteLine("  --version, -v   Muestra la version del programa");
-  Console.WriteLine();
-  Console.WriteLine("EJEMPLOS:");
-  Console.WriteLine(" dotnet run -- --help");
-  Console.WriteLine(" dotnet run -- --version");
-}
-
-void MostrarMenu()
-{
-  Console.WriteLine("\nMENU PRINCIPAL");
-  Console.WriteLine("1. listar - Ver productos");
-  Console.WriteLine("2. agregar - Añadir producto");
-  Console.WriteLine("3. buscar - Buscar producto");
-  Console.WriteLine("4. salir - Terminar\n");
-}
+var hayStockBajo = repositorio.HayStockBajo();
+Console.WriteLine($"\n Hay Stock Bajo? {hayStockBajo}");

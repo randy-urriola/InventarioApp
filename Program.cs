@@ -4,51 +4,43 @@ using InventarioApp.Models;
 using InventarioApp.Infrastructure;
 
 
-Console.WriteLine("=== InventarioApp ===");
+Console.WriteLine("=== Prueba integración JSON ===");
 
-var fileManager = new FileManager();
-string contenido = "Inventario Actualizado";
-fileManager.Escribir("inventario.txt", contenido);
+var almacenamiento = new JsonInventarioStorage();
 
-string leerContenido = fileManager.Leer("inventario.txt");
-Console.WriteLine(leerContenido);
-
-
-var repositorio = new InMemoryProductoRepository();
-
-var laptop = ProductoFactory.Crear("Laptop Dell XPS 13", 1200, 5, CategoriaProducto.Electronica);
-var mouse = ProductoFactory.Crear("Mouse Logitech MX Master", 99, 20, CategoriaProducto.Electronica);
-var teclado = ProductoFactory.Crear("Teclado Mecánico", 150, 3, CategoriaProducto.Electronica);
-var silla = ProductoFactory.Crear("Silla Ergonómica Herman Miller", 500, 8, CategoriaProducto.Muebles);
-var escritorio = ProductoFactory.Crear("Escritorio Stand-up", 300, 2, CategoriaProducto.Muebles);
-
-repositorio.Agregar(laptop);
-repositorio.Agregar(mouse);
-repositorio.Agregar(teclado);
-repositorio.Agregar(silla);
-repositorio.Agregar(escritorio);
-
-Console.WriteLine($"Productos agregados: {repositorio.Cantidad}\n");
-
-// consultas básicas LINQ
-
-var electronicos = repositorio.BuscarPorCategoria(CategoriaProducto.Electronica);
-Console.WriteLine("=== Productos Electrónicos ===");
-
-foreach (var producto in electronicos)
+var productos = new List<Producto>
 {
-  Console.WriteLine($"- {producto.Nombre} : ${producto.Precio}");
-}
+  new Producto
+  {
+    Id = 1,
+    Nombre = "Laptop",
+    Precio = 999.99m,
+    Cantidad = 10,
+    Categoria = CategoriaProducto.Electronica,
+    Estado = EstadoProducto.Activo
+    },
+  new Producto
+  {
+    Id = 2,
+    Nombre = "Camiseta",
+    Precio = 19.99m,
+    Cantidad = 50,
+    Categoria = CategoriaProducto.Ropa,
+    Estado = EstadoProducto.Activo
+  }
+};
 
-var conMouse = repositorio.BuscarPorNombre("mouse");
-Console.WriteLine("\nProductos con 'mouse' en el nombre: ");
-foreach (var producto in conMouse)
+string ruta = "inventario.json";
+
+almacenamiento.CrearBackup(ruta);
+almacenamiento.Guardar(productos, ruta);
+
+Console.WriteLine("Inventario guardado correctamente.");
+
+var productosCargados = almacenamiento.Cargar(ruta);
+
+Console.WriteLine("Inventario cargado correctamente:");
+foreach (var p in productosCargados)
 {
-  Console.WriteLine($"- {producto.Nombre}");
+  Console.WriteLine($"ID: {p.Id}, Nombre: {p.Nombre}, Precio: {p.Precio}, Cantidad: {p.Cantidad}, Categoria: {p.Categoria}, Estado: {p.Estado}");
 }
-
-var nombres = repositorio.ObtenerNombres();
-Console.WriteLine($"\n Todos los nombres: {string.Join(", ", nombres)}");
-
-var hayStockBajo = repositorio.HayStockBajo();
-Console.WriteLine($"\n Hay Stock Bajo? {hayStockBajo}");

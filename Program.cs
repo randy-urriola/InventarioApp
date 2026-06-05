@@ -1,46 +1,30 @@
 ﻿using InventarioApp.Factories;
-using InventarioApp.Repositories;
 using InventarioApp.Models;
 using InventarioApp.Infrastructure;
 
 
-Console.WriteLine("=== Prueba integración JSON ===");
-
-var almacenamiento = new JsonInventarioStorage();
-
 var productos = new List<Producto>
 {
-  new Producto
-  {
-    Id = 1,
-    Nombre = "Laptop",
-    Precio = 999.99m,
-    Cantidad = 10,
-    Categoria = CategoriaProducto.Electronica,
-    Estado = EstadoProducto.Activo
-    },
-  new Producto
-  {
-    Id = 2,
-    Nombre = "Camiseta",
-    Precio = 19.99m,
-    Cantidad = 50,
-    Categoria = CategoriaProducto.Ropa,
-    Estado = EstadoProducto.Activo
-  }
+  ProductoFactory.Crear("Laptop", 1200.00m,3, CategoriaProducto.Electronica),
+  ProductoFactory.Crear("Camisa", 45.00m, 15, CategoriaProducto.Ropa),
+  ProductoFactory.Crear("Arroz", 12.00m, 50, CategoriaProducto.Alimentos),
+  ProductoFactory.Crear("Lámpara", 35.00m, 2, CategoriaProducto.Hogar),
+  ProductoFactory.Crear("Balón", 25.00m, 8, CategoriaProducto.Deportes),
+  ProductoFactory.Crear("Mesa", 150.00m, 4, CategoriaProducto.Muebles),
 };
 
-string ruta = "inventario.json";
+var generador = new GeneradorReportes(productos);
 
-almacenamiento.CrearBackup(ruta);
-almacenamiento.Guardar(productos, ruta);
+Console.WriteLine(generador.GenerarResumen());
+Console.WriteLine("\n");
 
-Console.WriteLine("Inventario guardado correctamente.");
+Console.WriteLine(generador.GenerarReporteStockBajo());
+Console.WriteLine("\n");
 
-var productosCargados = almacenamiento.Cargar(ruta);
+Console.WriteLine(generador.GenerarTopProductos());
+Console.WriteLine("\n");
 
-Console.WriteLine("Inventario cargado correctamente:");
-foreach (var p in productosCargados)
-{
-  Console.WriteLine($"ID: {p.Id}, Nombre: {p.Nombre}, Precio: {p.Precio}, Cantidad: {p.Cantidad}, Categoria: {p.Categoria}, Estado: {p.Estado}");
-}
+Console.WriteLine(generador.ExportarCsv());
+Console.WriteLine("\n");
+
+Console.WriteLine(generador.ExportarResumenJson());
